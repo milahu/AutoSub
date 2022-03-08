@@ -185,7 +185,7 @@ def silence_removal(signal, sampling_rate, st_win, st_step, smooth_window=0.5,
     return seg_limits
 
 
-def remove_silent_segments(input_file, smoothing_window=1.0, weight=0.2):
+def remove_silent_segments(input_file, audio_directory, smoothing_window=1.0, weight=0.2):
     """Remove silent segments from an audio file and split on those segments
 
     Args:
@@ -200,7 +200,6 @@ def remove_silent_segments(input_file, smoothing_window=1.0, weight=0.2):
     [fs, x] = read_audio_file(input_file)
     segmentLimits = silence_removal(x, fs, 0.05, 0.05, smoothing_window, weight)
 
-    for i, s in enumerate(segmentLimits):
-        strOut = "{0:s}_{1:.3f}-{2:.3f}.wav".format(input_file[0:-4], s[0], s[1])
-        wavfile.write(strOut, fs, x[int(fs * s[0]):int(fs * s[1])])
-
+    for i, (start, end) in enumerate(segmentLimits):
+        file_path = os.path.join(audio_directory, f"{start:.3f}-{end:.3f}.wav")
+        wavfile.write(file_path, fs, x[int(fs * start):int(fs * end)])
