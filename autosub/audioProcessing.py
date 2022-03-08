@@ -28,7 +28,7 @@ def extract_audio(input_file, audio_file_name):
         command = ["ffmpeg", "-hide_banner", "-loglevel", "warning", "-i", input_file, "-ac", "1", "-ar", "16000",
                    "-vn", "-f", "wav", audio_file_name]
         ret = subprocess.run(command).returncode
-        _logger.info(f"Extracted audio to audio/{basename(audio_file_name)}")
+        _logger.info(f"Extracted audio to {audio_file_name}")
     except Exception as e:
         _logger.error(str(e))
         sys.exit(1)
