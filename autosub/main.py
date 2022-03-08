@@ -11,7 +11,7 @@ import argparse
 import numpy as np
 from tqdm import tqdm
 
-from .utils import *
+from . import utils
 from .writeToFile import write_to_file
 from .audioProcessing import extract_audio
 from .segmentAudio import remove_silent_segments
@@ -103,11 +103,11 @@ def main():
     #print(sys.argv[0:])
     _logger.info(f"ARGS: {args}")
 
-    ds_model = get_model(args, "model")
-    ds_scorer = get_model(args, "scorer")
+    ds_model = utils.get_model(args, "model")
+    ds_scorer = utils.get_model(args, "scorer")
 
     if args.dry_run:
-        create_model(args.engine, ds_model, ds_scorer) 
+        utils.create_model(args.engine, ds_model, ds_scorer)
         if args.file is not None:
             if not os.path.isfile(args.file):
                 _logger.warn(f"Invalid file: {args.file}")
@@ -154,7 +154,7 @@ def main():
     audiofiles.remove(os.path.basename(audio_file_name))
 
     _logger.info("Running inference...")
-    ds = create_model(args.engine, ds_model, ds_scorer) 
+    ds = utils.create_model(args.engine, ds_model, ds_scorer)
 
     for filename in tqdm(audiofiles):
         audio_segment_path = os.path.join(audio_directory, filename)
