@@ -23,9 +23,9 @@ line_count = 1
 
 
 def ds_process_audio(ds, audio_file, output_file_handle_dict, split_duration):
-    """sttWithMetadata() will run DeepSpeech inference on each audio file 
-    generated after remove_silent_segments. These files contain start and end 
-    timings in their title which we use in srt file. 
+    """sttWithMetadata() will run DeepSpeech inference on each audio file
+    generated after remove_silent_segments. These files contain start and end
+    timings in their title which we use in srt file.
 
     Args:
         ds : DeepSpeech Model
@@ -97,9 +97,9 @@ def main():
     parser.add_argument("--file", required=False, help="Input video file")
     parser.add_argument("--model", required=False, help="Input *.pbmm model file")
     parser.add_argument("--scorer", required=False, help="Input *.scorer file")
-    
+
     args = parser.parse_args()
-    
+
     #print(sys.argv[0:])
     _logger.info(f"ARGS: {args}")
 
@@ -129,7 +129,7 @@ def main():
     audio_directory = os.path.join(base_directory, "audio")
     video_prefix = os.path.splitext(os.path.basename(input_file))[0]
     audio_file_name = os.path.join(audio_directory, video_prefix + ".wav")
-    
+
     os.makedirs(output_directory, exist_ok=True)
     os.makedirs(audio_directory, exist_ok=True)
     output_file_handle_dict = {}
@@ -143,14 +143,14 @@ def main():
             output_file_handle_dict[format].write("WEBVTT\n")
             output_file_handle_dict[format].write("Kind: captions\n\n")
 
-    clean_folder(audio_directory)
+    utils.clean_folder(audio_directory)
     extract_audio(input_file, audio_file_name)
 
     _logger.info("Splitting on silent parts in audio file")
     remove_silent_segments(audio_file_name)
 
     audiofiles = [file for file in os.listdir(audio_directory) if file.startswith(video_prefix)]
-    audiofiles = sort_alphanumeric(audiofiles)
+    audiofiles = utils.sort_alphanumeric(audiofiles)
     audiofiles.remove(os.path.basename(audio_file_name))
 
     _logger.info("Running inference...")
