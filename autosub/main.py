@@ -142,9 +142,9 @@ def main():
     base_directory = f"{input_file_hash}-{os.path.basename(input_file)}"[0:240] # limit is 255 chars
     _logger.info(f"Base directory: {base_directory}")
     output_directory = os.path.join(base_directory, "output")
-    audio_directory = os.path.join(base_directory, "audio")
+    audio_directory = os.path.join(base_directory, "segments")
     video_prefix = os.path.splitext(os.path.basename(input_file))[0]
-    audio_file_name = os.path.join(audio_directory, video_prefix + ".wav")
+    audio_file_name = os.path.join(base_directory, video_prefix + ".wav")
 
     os.makedirs(output_directory, exist_ok=True)
     os.makedirs(audio_directory, exist_ok=True)
@@ -165,9 +165,9 @@ def main():
     _logger.info("Splitting on silent parts in audio file")
     remove_silent_segments(audio_file_name)
 
-    audiofiles = [file for file in os.listdir(audio_directory) if file.startswith(video_prefix)]
+    audiofiles = os.listdir(audio_directory)
     audiofiles = utils.sort_alphanumeric(audiofiles)
-    audiofiles.remove(os.path.basename(audio_file_name))
+    _logger.info(f"Splitting produced {len(audiofiles)} audio segments")
 
     _logger.info("Running inference...")
     ds = utils.create_model(args.engine, ds_model, ds_scorer)
