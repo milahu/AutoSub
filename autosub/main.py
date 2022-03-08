@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# TODO run in parallel: remove_silent_segments and ds_process_audio
+# TODO use multi core cpu
+# TODO run both engines in parallel?
+
 import os
 import re
 import sys
