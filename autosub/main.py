@@ -16,11 +16,22 @@ from .writeToFile import write_to_file
 from .audioProcessing import extract_audio
 from .segmentAudio import remove_silent_segments
 
+import hashlib
+
 _logger = logger.setup_applevel_logger(__name__)
 
 # Line count for SRT file
 line_count = 1
 
+# https://stackoverflow.com/a/44873382/10440128
+def sha1sum(filepath):
+    h  = hashlib.sha1()
+    b  = bytearray(128*1024)
+    mv = memoryview(b)
+    with open(filepath, 'rb', buffering=0) as f:
+        for n in iter(lambda : f.readinto(mv), 0):
+            h.update(mv[:n])
+    return h.hexdigest()
 
 def ds_process_audio(ds, audio_file, output_file_handle_dict, split_duration):
     """sttWithMetadata() will run DeepSpeech inference on each audio file
@@ -124,7 +135,12 @@ def main():
         _logger.error("One or more of --file or --dry-run are required")
         sys.exit(1)
 
-    base_directory = os.getcwd()
+    #base_directory = os.getcwd()
+    #base_directory = "." # cwd, relative path
+    input_file_hash = sha1sum(input_file)
+    _logger.info(f"Input file hash: {input_file_hash}")
+    base_directory = f"{input_file_hash}-{os.path.basename(input_file)}"[0:240] # limit is 255 chars
+    _logger.info(f"Base directory: {base_directory}")
     output_directory = os.path.join(base_directory, "output")
     audio_directory = os.path.join(base_directory, "audio")
     video_prefix = os.path.splitext(os.path.basename(input_file))[0]
