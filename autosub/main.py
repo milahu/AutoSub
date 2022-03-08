@@ -103,8 +103,8 @@ def main():
     parser.add_argument("--dry-run", dest="dry_run", action="store_true",
                         help="Perform dry-run to verify options prior to running. Also useful to instantiate \
                             cuda/tensorflow cache prior to running multiple times")
-    parser.add_argument("--engine", choices=supported_engines, nargs="?", default="stt",
-                        help="Select either DeepSpeech or Coqui STT for inference. Latter is default")
+    parser.add_argument("--engine", choices=supported_engines, nargs="?", default="ds",
+                        help="Select either DeepSpeech or Coqui STT for inference. Default is DeepSpeech")
     parser.add_argument("--file", required=False, help="Input video file")
     parser.add_argument("--model", required=False, help="Input *.pbmm model file")
     parser.add_argument("--scorer", required=False, help="Input *.scorer file")
