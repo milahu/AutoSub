@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+import re
 
 
 
@@ -23,6 +24,8 @@ def write_to_file(output_file_handle_dict, inferred_text, line_count, limits, cu
         limits : starting and ending times for text
     """
 
+    inferred_text = inferred_text.strip()
+
     for format in output_file_handle_dict.keys():
         from_dur = format_seconds(limits[0], format)
         to_dur = format_seconds(limits[1], format)
@@ -39,7 +42,7 @@ def write_to_file(output_file_handle_dict, inferred_text, line_count, limits, cu
             # song lyrics).
             # Insert an empty line as the first line is for text without a cue
             file_handle.write("\n")
-            words = inferred_text.split(" ")
+            words = re.split(r"\s+", inferred_text)
             # The first word in any VTT subtitle from YouTube does not have a cue timing associated with it,
             # presumably because it uses the timestamp of the subtitle line itself as the first cue.
             # This approach is taken here too
