@@ -136,7 +136,7 @@ def main():
 
     for format in args.format:
         output_filename = os.path.join(output_directory, video_prefix + "." + format)
-        # print("Creating file: " + output_filename)
+        _logger.info(f"output file: {output_filename}")
         output_file_handle_dict[format] = open(output_filename, "w")
         # For VTT format, write header
         if format == "vtt":
